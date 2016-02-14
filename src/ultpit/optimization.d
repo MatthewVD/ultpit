@@ -332,14 +332,19 @@ unittest {
     auto result = optimizeFiles(json, inputFile, outputFile);
     assert(result == 0);
 
+    // Reuse data class
+    Data resultData;
     File output = File(outputFile, "r");
-    auto res = readFile(output, grid, [0]);
+    resultData.initializeFromGSLIB(output, grid, 0);
     ulong k;
     foreach (j; 0 .. nz) {
         foreach (i; 0 .. nx) {
-            assert(sol[j][i] == res[0][0][k]);
+            assert(sol[j][i] == resultData.ebv[0][k]);
             k++;
         }
     }
+
+    remove(inputFile);
+    remove(outputFile);
 }
 
