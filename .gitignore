@@ -1,0 +1,11 @@
+*.swp
+*.exe
+*.obj
+
+.dub/*
+
+/__test__library__
+/ultpit
+
+test/*/log.txt
+test/*/result.txt.gz

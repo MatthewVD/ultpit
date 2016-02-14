@@ -1,0 +1,21 @@
+{
+"input" : {
+  "type" : 2,
+  "grid" : {
+             "num_x": 60, "min_x": 800.0, "siz_x": 20.0,
+             "num_y": 60, "min_y": 100.0, "siz_y": 20.0,
+             "num_z": 13, "min_z": 100.0, "siz_z": 20.0 
+           }
+},
+
+"precedence" : {
+  "method" : 1,
+
+  "slope" : 45.0,
+  "num_benches": 8
+},
+
+"optimization" : {
+  "engine" : 1
+}
+}
