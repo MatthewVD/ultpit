@@ -9,3 +9,5 @@
 
 test/*/log.txt
 test/*/result.txt.gz
+
+/3rd/pseudo
