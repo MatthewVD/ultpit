@@ -20,18 +20,21 @@ overly difficult to modify the code for a windows system:
 
 - Download the solver (Version 3.23 at the time of writing)
 - Run the following command to extract the tar file
-
+    ```
     tar -xvf pseudo-max-3.23_2.tar
+    ```
 
 - Modify the makefile, add '-DDISPLAY_CUT' to the pseudo_fifo target, it should look
   similar to:
-    
+    ```
     ${BINDIR}/pseudo_fifo:
         ${CC} ${CFLAGS} -DFIFO_BUCKET -DDISPLAY_CUT src/3.23/pseudo.c -o bin/pseudo_fifo
+    ```
 
 - Run the following command to compile
-
+    ```
     make pseudo_fifo
+    ```
 
 - Grab the executable out of the bin/ folder
 
