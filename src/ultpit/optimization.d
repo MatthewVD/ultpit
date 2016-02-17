@@ -174,25 +174,20 @@ int optimize(in Parameters params, in Data data, out bool[][]
     bool[][] solutions = new bool[][](condensedEBV.ebv.length,
             condensedEBV.ebv[0].length);
 
-    checkJSONForRequired(params.optimizationOptions, ["engine"]);
-    OptimizationEngine engineType = parseJSONEnum!OptimizationEngine(params.optimizationOptions["engine"]);
-
     // Solve-em
     if (logger) {
         logger.log("Begin optimizing");
     }
     foreach (r; 0 .. nReal) {
         UltpitEngine engine;
-        switch (engineType) {
-            case OptimizationEngine.LERCHSGROSSMANN:
-                engine = new LG3D();
-                break;
-            default:
-                stderr.writeln("ERROR: Invalid engine type");
-                return 1;
+        try {
+            engine = getEngine(params.optimizationOptions);
+        } catch (Exception e) {
+            stderr.writeln("Error: failed initializing optimization engine");
+            stderr.writeln(e.msg);
+            return 1;
         }
-
-        engine.computeSolution(condensedEBV.ebv[r], condensedPre, solutions[r], params);
+        engine.computeSolution(condensedEBV.ebv[r], condensedPre, solutions[r]);
 
         if (logger) {
             double ebv = 0;

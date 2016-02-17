@@ -30,12 +30,12 @@ module ultpit.lg3d;
 import ultpit.engine;
 import ultpit.precedence;
 import ultpit.logger;
-import ultpit.parameters;
 
 import std.conv;
 import std.algorithm;
 import std.range;
 import std.stdio;
+import std.json;
 
 auto immutable PLUS = true;
 auto immutable MINUS = false;
@@ -135,8 +135,11 @@ class LG3D : UltpitEngine {
     LG_Stack!int strongPlusses;
     LG_Stack!int strongMinuses;
 
+    void initializeFromJSON(in JSONValue json) {
+    }
+
     int computeSolution(in double[] data, in Precedence pre,
-            out bool[] solution, in Parameters params, Logger* = null) {
+            out bool[] solution, Logger* = null) {
         count = data.length;
         solution.length = count;
 

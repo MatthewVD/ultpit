@@ -15,6 +15,7 @@ import ultpit.logger;
 import std.stdio;
 import std.conv;
 import std.math;
+import std.json;
 
 immutable auto PRECISION = 100.0; 
 
@@ -63,12 +64,14 @@ void writeDimacsFile(in double[] data, in Precedence pre, ref File output) {
 }
 
 class DimacsSolver : UltpitEngine {
+    void initializeFromJSON(in JSONValue json) {
+    }
+
     int computeSolution(in double[] data, in Precedence pre,
-            out bool[] solution, in Parameters params, Logger* = null) {
+            out bool[] solution, Logger* = null) {
         ulong count = data.length;
         solution.length = count;
 
-        //string path = params.DimacsPath;
         return 0;
     }
 }
