@@ -27,15 +27,20 @@ class DimacsSolver : UltpitEngine {
     void initializeFromJSON(in JSONValue json) {
         checkJSONForRequired(json, ["dimacs_path"]);
 
-        path = json["dimacs_path"].str;
-        if (!exists(path)) {
-            throw new Exception("Dimacs program " ~ path ~ " does not exist");
-        }
+        initialize(json["dimacs_path"].str);
 
         if ("precision" in json.object) {
             precision = parseJSONNumber!double(json["precision"]);
         } else {
             precision = 100.0;
+        }
+    }
+
+    void initialize(string inPath)
+    {
+        path = inPath;
+        if (!exists(path)) {
+            throw new Exception("Dimacs program " ~ path ~ " does not exist");
         }
     }
 

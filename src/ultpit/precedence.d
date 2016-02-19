@@ -56,6 +56,38 @@ struct Precedence {
         logExtraInfo(logger);
     }
 
+    void initialize2D(in double[][] ebv)
+    {
+        int nz = to!int(ebv.length);
+        assert(nz > 0);
+        int nx = to!int(ebv[0].length);
+        assert(nx > 0);
+
+        int z = nx;
+        int x = 1;
+
+        defs = [[ z-x, z, z+x],
+                [ z, z+x],
+                [ z, z-x]];
+
+        keys.length = nx * nz;
+        int l;
+        foreach (k; 0 .. nz) {
+            foreach (i; 0 .. nx) {
+                if (i == 0) {
+                    keys[l] = 1;
+                }
+                if (i == (nx - 1)) {
+                    keys[l] = 2;
+                }
+                if (k == (nz - 1)) {
+                    keys[l] = MISSING;
+                }
+                l++;
+            }
+        }
+    }
+
     void logExtraInfo(Logger* logger) {
         if (logger) {
             uint count;

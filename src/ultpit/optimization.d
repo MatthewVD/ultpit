@@ -15,6 +15,7 @@ import ultpit.precedence;
 import ultpit.engine;
 import ultpit.compress;
 import ultpit.lg3d;
+import ultpit.dimacs;
 import ultpit.data;
 
 import std.json;
@@ -187,7 +188,12 @@ int optimize(in Parameters params, in Data data, out bool[][]
             stderr.writeln(e.msg);
             return 1;
         }
-        engine.computeSolution(condensedEBV.ebv[r], condensedPre, solutions[r]);
+        int status = engine.computeSolution(condensedEBV.ebv[r], condensedPre,
+                solutions[r]);
+        if (status != 0)
+        {
+            return status;
+        }
 
         if (logger) {
             double ebv = 0;
@@ -236,6 +242,7 @@ int optimize(in Parameters params, in Data data, out bool[][]
 
     return 0;
 }
+
 
 bool[] generateMask(in Parameters params, in Data data, Logger* logger = null) {
     uint n = data.grid.gridCount;
@@ -341,5 +348,75 @@ unittest {
 
     remove(inputFile);
     remove(outputFile);
+}
+
+// Helper function for optimizing a 2d dataset, mainly for testing, 
+int optimize2D(in double[][] ebv, out bool[][] solution, UltpitEngine engine)
+{
+    int nz = to!int(ebv.length);
+    assert(nz > 0);
+    int nx = to!int(ebv[0].length);
+    assert(nx > 0);
+
+    Precedence pre;
+    pre.initialize2D(ebv);
+
+    double[] flat = new double[](ebv.length * ebv[0].length);
+    uint l;
+    foreach (k; 0 .. nz) { foreach (i; 0 .. nx)
+        {
+            flat[l] = ebv[k][i];
+            l++;
+        }
+    }
+
+    bool[] flatSolution;
+    auto status = engine.computeSolution(flat, pre, flatSolution);
+    if (status != 0)
+    {
+        return status;
+    }
+
+    solution = new bool[][](nz, nx);
+    l = 0;
+    foreach (k; 0 .. nz) {
+        foreach (i; 0 .. nx) {
+            solution[k][i] = flatSolution[l];
+            l++;
+        }
+    }
+
+    return 0;
+}
+
+unittest {
+    double[][] ebv =    [[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                         [ 0, 0,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2],
+                         [-2,-2,-2,-2, 4,-1,-2,-3,-2,-2,-2,-2,-2,-2,-2],
+                         [-2,-2,-2,-2,-2,-2,20,-2,-2,-2,-2,-2,-2,-2,-2],
+                         [-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2],
+                         [-2,-2,-2,-2,-2,-2,-2,-2,-2,10,-2,-2,-2,-2,-2],
+                         [-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2],
+                         [-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2]];
+    bool[][] solution = [[ 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+                         [ 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+                         [ 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0],
+                         [ 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+                         [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                         [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                         [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                         [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]];
+    bool[][] result;
+    reverse(ebv); reverse(solution);
+
+    UltpitEngine lg3d = new LG3D();
+    optimize2D(ebv, result, lg3d);
+    assert (solution == result);
+
+    UltpitEngine dimacs = new DimacsSolver();
+    JSONValue json = parseJSON("{\"dimacs_path\": \"3rd/pseudo/pseudo_fifo\"}");
+    dimacs.initializeFromJSON(json);
+    optimize2D(ebv, result, dimacs);
+    assert (solution == result);
 }
 
