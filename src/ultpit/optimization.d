@@ -420,3 +420,51 @@ unittest {
     assert (solution == result);
 }
 
+unittest {
+    double[][][] ebvs =    [
+                            [[-1,-1,-1,-1,-1],
+                             [-1,-1,-1,-1,-1],
+                             [-1,-1,-1,-1,-1]],
+
+                            [[-1,-1,-1,-1,-1],
+                             [-1,-1,-1,-1,-1],
+                             [-1,-1, 8,-1,-1]],
+
+                            [[-1,-1,-1,-1,-1],
+                             [-1,-1,-1,-1,-1],
+                             [-1,-1, 9,-1,-1]],
+                           ];
+    bool[][][] solutions = [
+                            [[ 0, 0, 0, 0, 0],
+                             [ 0, 0, 0, 0, 0],
+                             [ 0, 0, 0, 0, 0]],
+
+                            [[ 0, 0, 0, 0, 0],
+                             [ 0, 0, 0, 0, 0],
+                             [ 0, 0, 0, 0, 0]],
+
+                            [[ 1, 1, 1, 1, 1],
+                             [ 0, 1, 1, 1, 0],
+                             [ 0, 0, 1, 0, 0]],
+                           ];
+    assert(ebvs.length == solutions.length);
+    ulong nTestCases = ebvs.length;
+    foreach (i; 0 .. nTestCases) {
+        reverse(ebvs[i]);
+        reverse(solutions[i]);
+    }
+
+    JSONValue json = parseJSON("{\"dimacs_path\": \"3rd/pseudo/pseudo_fifo\"}");
+    foreach (i; 0 .. nTestCases) {
+        bool[][] result;
+
+        UltpitEngine lg3d = new LG3D();
+        optimize2D(ebvs[i], result, lg3d);
+        assert(solutions[i] == result);
+
+        UltpitEngine dimacs = new DimacsSolver();
+        dimacs.initializeFromJSON(json);
+        optimize2D(ebvs[i], result, dimacs);
+        assert(solutions[i] == result);
+    }
+}
