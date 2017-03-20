@@ -26,13 +26,7 @@ interface UltpitEngine {
     void initializeFromJSON(in JSONValue json);
 
     int computeSolution(in double[] data, in Precedence pre,
-            out bool[] solution, Logger* = null)
-    in {
-        assert(pre.keys.length == data.length);
-    }
-    out {
-        assert(solution.length == data.length);
-    }
+            out bool[] solution, Logger* = null);
 }
 
 UltpitEngine getEngine(in JSONValue json) {

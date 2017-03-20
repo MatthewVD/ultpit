@@ -48,6 +48,11 @@ You will get, as output, a file with the same number of rows as your input data 
 and ones. A zero indicates that the block should not be mined, and a one indicates that
 the block should be mined.
 
+Compilation
+===========
+
+    dub --arch=x86_64
+
 Roadmap
 ========
 

@@ -11,6 +11,7 @@ import ultpit.grid;
 import ultpit.util;
 
 import std.stdio;
+import std.string;
 import std.file;
 import std.algorithm;
 import std.conv;
@@ -19,6 +20,7 @@ import std.string;
 import std.range;
 import std.json;
 import std.exception;
+import std.typecons;
 
 enum InputFormat {
     GSLIB = 1,
@@ -55,6 +57,9 @@ struct Data {
                 checkJSONForRequired(json, ["grid"]);
                 grid = new Grid(json["grid"], Yes.gslibFormat);
 
+                if (!exists(inputFile)) {
+                    throw new Exception("Input file " ~ inputFile ~ " does not exist");
+                }
                 initializeFromGzip(inputFile, grid);
                 break;
             default:

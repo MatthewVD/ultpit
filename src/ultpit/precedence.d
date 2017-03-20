@@ -102,8 +102,11 @@ struct Precedence {
             logger.writefln("Number of different arc templates: %s", defs.length);
 
             ulong arcCount;
-            keys.each!(a => (a != MISSING) ? arcCount += defs[a].length :
-                    arcCount += 0);
+            foreach (v; keys) {
+                if (v != MISSING) {
+                    arcCount += defs[v].length;
+                }
+            }
             logger.writefln("Number of uncompressed arcs: %s", arcCount);
 
             /*
