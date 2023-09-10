@@ -1,4 +1,4 @@
-**THIS REPOSITORY IS SUPERCEDED BY:** [github.com/Mineflowcsm/mineflow](github.com/Mineflowcsm/mineflow)
+**THIS REPOSITORY IS SUPERCEDED BY:** [github.com/Mineflowcsm/mineflow](https://github.com/Mineflowcsm/mineflow)
 
 
 
