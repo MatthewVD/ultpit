@@ -1,3 +1,7 @@
+**THIS REPOSITORY IS SUPERCEDED BY:** github.com/Mineflowcsm/mineflow
+
+
+
 ULTPIT
 ======
 Ultpit is a command line utility to calculate the ultimate pit for open pit mining
